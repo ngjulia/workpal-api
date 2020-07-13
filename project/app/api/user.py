@@ -7,7 +7,7 @@ from app.models.pydantic import (
     TaskIn,
     TaskOut,
 )
-from app.models.tortoise import User, Task
+from app.models.tortoise import UserSchema, TaskSchema
 from typing import List
 
 router = APIRouter()
