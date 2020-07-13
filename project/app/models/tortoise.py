@@ -12,18 +12,6 @@ from tortoise.contrib.pydantic import pydantic_model_creator  # new
 #    def __str__(self):
 #        return self.url
 
-class Task(models.Model):
-    id = fields.IntField(pk=True)
-    user = fields.ForeignKeyField("models.User")
-    name = fields.TextField()
-    completed = fields.BooleanField()
-    completion_time = fields.IntField()
-    rank = fields.IntField()
-    created_at = fields.DatetimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
 class User(models.Model):
     id = fields.IntField(pk=True)
     full_name: fields.TextField()
@@ -32,6 +20,18 @@ class User(models.Model):
 
     def __str__(self):
         return self.full_name
+        
+class Task(models.Model):
+    id = fields.IntField(pk=True)
+    user_id = fields.ForeignKeyField("models.User", related_name='tasks')
+    name = fields.TextField()
+    completed = fields.BooleanField()
+    completion_time = fields.IntField()
+    rank = fields.IntField()
+    created_at = fields.DatetimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
 
 
 #SummarySchema = pydantic_model_creator(TextSummary)
