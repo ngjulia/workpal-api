@@ -1,5 +1,5 @@
 # project/app/models/pydantic.py
-
+from typing import Optional, List
 from pydantic import BaseModel, AnyHttpUrl
 
 
@@ -16,14 +16,14 @@ from pydantic import BaseModel, AnyHttpUrl
 
 class UserIn(BaseModel):
     full_name: Optional[str] = None
-    email: EmailStr
+    email: str
     phone: str
     
 class UserOut(BaseModel):
     full_name: Optional[str] = None
-    email: EmailStr
+    email: str
     phone: str
-    tasks: List[Task] = []
+    tasks: List[str] = []
     
 class TaskIn(BaseModel):
     name: str

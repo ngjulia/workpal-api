@@ -35,8 +35,8 @@ async def get_all_users() -> List:
     users = await User.all().values()
     return users
 
-async def get_all_tasks() -> List:
-    tasks = await Task.all().values()
+async def get_all_tasks(id: int) -> List:
+    tasks = await Task.filter(user_id=id).first().values()
     return tasks
 
 # Delete
