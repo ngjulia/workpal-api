@@ -28,26 +28,26 @@ async def create_task(payload: TaskIn, id: int = Path(..., gt=0)) -> TaskOut:
     return response_object
 
 # GET
-@router.get("/user/{id}", response_model=UserOut)
-async def read_user(id: int = Path(..., gt=0)) -> UserOut:
+@router.get("/user/{id}", response_model=UserSchema)
+async def read_user(id: int = Path(..., gt=0)) -> UserSchema:
     user = await crud.get_user(id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@router.get("/user/{id}/task/{task_id}", response_model=TaskOut)
-async def read_task(id: int = Path(..., gt=0), task_id: int = Path(..., gt=0)) -> TaskOut:
+@router.get("/user/{id}/task/{task_id}", response_model=TaskSchema)
+async def read_task(id: int = Path(..., gt=0), task_id: int = Path(..., gt=0)) -> TaskSchema:
     task = await crud.get_task(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return task
 
-@router.get("/user", response_model=List[UserOut])
-async def read_all_users() -> List[UserOut]:
+@router.get("/user", response_model=List[UserSchema])
+async def read_all_users() -> List[UserSchema]:
     return away crud.get_all_users
 
-@router.get("/user", response_model=List[TaskOut])
-async def read_all_tasks() -> List[TaskOut]:
+@router.get("/user", response_model=List[TaskSchema])
+async def read_all_tasks() -> List[TaskSchema]:
     return away crud.get_all_tasks
 
 # DELETE
@@ -71,20 +71,20 @@ async def delete_task(id: int = Path(..., gt=0), task_id: int=Path(..., gt=0)) -
 
     return task
 
-@router.put("/user/{id}", response_model=UserOut)
+@router.put("/user/{id}", response_model=UserSchema)
 async def update_user(
     payload: UserIn, id: int = Path(..., gt=0)
-) -> UserOut:
+) -> UserSchema:
     user = await crud.put_user(id, payload)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
     return user
 
-@router.put("/user/{id}/task/{task_id}", response_model=TaskOut)
+@router.put("/user/{id}/task/{task_id}", response_model=TaskSchema)
 async def update_task(
     payload: TaskIn, id: int = Path(..., gt=0)
-) -> TaskOut:
+) -> TaskSchema:
     task = await crud.put_user(task_id, payload)
     if not user:
         raise HTTPException(status_code=404, detail="Task not found")
