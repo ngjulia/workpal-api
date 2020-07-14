@@ -19,9 +19,22 @@ async def post_task(payload: TaskIn) -> int:
     return task.id
 
 # Read
+async def get_all_tasks(id: int) -> List:
+    tasks = await Task.filter(user_id=id).first().values()
+    return tasks
+
+async def get_all_users() -> List:
+    users = await User.all().values()
+    for user in users:
+        tasks = await Task.filter(user_id=user['id']).first().values()
+        user['tasks'] = tasks # not sure if this is the right syntax
+    return users
+
 async def get_user(id: int) -> Union[dict, None]:
     user = await User.filter(id=id).first().values()
+    tasks = await Task.filter(user_id=id).first().values()
     if user:
+        user[0]['tasks'] = tasks # not sure if this is the right syntax
         return user[0]
     return None
 
@@ -30,14 +43,6 @@ async def get_task(id: int) -> Union[dict, None]:
     if task:
         return task[0]
     return None
-
-async def get_all_users() -> List:
-    users = await User.all().values()
-    return users
-
-async def get_all_tasks(id: int) -> List:
-    tasks = await Task.filter(user_id=id).first().values()
-    return tasks
 
 # Delete
 async def delete_user(id: int) -> int:

@@ -23,7 +23,7 @@ class UserOut(BaseModel):
     full_name: Optional[str] = None
     email: str
     phone: str
-    tasks: List[str] = []
+    tasks: List[str]
     
 class TaskIn(BaseModel):
     name: str
