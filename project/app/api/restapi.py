@@ -26,15 +26,19 @@ async def get_all_tasks(id: int) -> List:
 async def get_all_users() -> List:
     users = await User.all().values()
     for user in users:
-        tasks = await Task.filter(user_id=user['id']).first().values()
-        user['tasks'] = tasks # not sure if this is the right syntax
+        #tasks = await Task.filter(user_id=user['id']).first().values()
+        #user['tasks'] = tasks # not sure if this is the right syntax
+        await user.fetch_related('tasks')
+        tasks = user.tasks
     return users
 
 async def get_user(id: int) -> Union[dict, None]:
     user = await User.filter(id=id).first().values()
-    tasks = await Task.filter(user_id=id).first().values()
+    #tasks = await Task.filter(user_id=id).first().values()
     if user:
-        user[0]['tasks'] = tasks # not sure if this is the right syntax
+        await user[0].fetch_related('tasks')
+        tasks = user[0].tasks
+        #user[0]['tasks'] = tasks # not sure if this is the right syntax
         return user[0]
     return None
 
