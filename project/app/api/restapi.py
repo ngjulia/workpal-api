@@ -1,5 +1,5 @@
 from app.models.pydantic import UserIn, TaskIn
-from app.models.tortoise import User, Task
+from app.models.tortoise import UserSchema, TaskSchema
 from typing import Union, List
 
 """
