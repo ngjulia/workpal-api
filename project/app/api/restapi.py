@@ -1,5 +1,5 @@
 from app.models.pydantic import UserIn, TaskIn
-from app.models.tortoise import UserSchema, TaskSchema
+from app.models.tortoise import User, Task
 from typing import Union, List
 
 """
@@ -14,7 +14,7 @@ async def post_user(payload: UserIn) -> int:
     return user.id
 
 async def post_task(payload: TaskIn) -> int:
-    task = User(name=payload.name, description=payload.description, rank=payload.rank, completed=payload.completed, completion_time=payload.completion_time, user_id = payload.user_id)
+    task = Task(name=payload.name, description=payload.description, rank=payload.rank, completed=payload.completed, completion_time=payload.completion_time, user_id = payload.user_id)
     await task.save()
     return task.id
 
