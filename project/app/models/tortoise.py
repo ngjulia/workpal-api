@@ -14,9 +14,9 @@ from tortoise.contrib.pydantic import pydantic_model_creator  # new
 
 class User(models.Model):
     id = fields.IntField(pk=True)
-    full_name: fields.TextField()
-    email: fields.TextField()
-    phone: fields.TextField()
+    full_name= fields.TextField()
+    email= fields.TextField()
+    phone=fields.TextField()
 
     def __str__(self):
         return self.full_name
@@ -32,7 +32,6 @@ class Task(models.Model):
 
     def __str__(self):
         return self.name
-
 
 #SummarySchema = pydantic_model_creator(TextSummary)
 UserSchema = pydantic_model_creator(User)
