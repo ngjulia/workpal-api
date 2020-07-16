@@ -30,15 +30,15 @@ class TaskIn(BaseModel):
     description: str
     rank: int
     completed: bool
-    completion_time = int
-    user_id = int
+    completion_time: int
+    # user_id = int
 
 class TaskOut(BaseModel):
     name: str
     description: str
     rank: int
     completed: bool
-    completion_time = int
-    created_at = str
-    user_id = int
+    completion_time: int
+    created_at: str
+    user_id: int
 
