@@ -20,6 +20,7 @@ class UserIn(BaseModel):
     phone: str
     
 class UserOut(BaseModel):
+    id: int
     full_name: Optional[str] = None
     email: str
     phone: str
@@ -31,7 +32,7 @@ class TaskIn(BaseModel):
     rank: int
     completed: bool
     completion_time: int
-    # user_id = int
+    user_id = int
 
 class TaskOut(BaseModel):
     name: str
