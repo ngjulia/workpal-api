@@ -13,15 +13,18 @@ from typing import List
 router = APIRouter()
 
 # POST 
-@router.post("/", response_model=UserOut, status_code=201)
-async def create_user(payload: UserIn) -> UserOut:
+@router.post("/", response_model=UserSchema, status_code=201)
+async def create_user(payload: UserIn) -> UserSchema:
     user_id = await restapi.post_user(payload)
 
     response_object = {"id": user_id, "full_name": payload.full_name, "email": payload.email, "phone": payload.phone, "tasks":[]}
     return response_object
 
-@router.post("/{id}/task", response_model=TaskOut, status_code=201)
-async def create_task(payload: TaskIn, id: int = Path(..., gt=0)) -> TaskOut:
+@router.post("/{id}/task", response_model=TaskSchema, status_code=201)
+async def create_task(payload: TaskIn, id: int = Path(..., gt=0)) -> TaskSchema:
+    # user = await restapi.get_user(id)
+    # if not user:
+    #     raise HTTPException(status_code=404, detail="User not found")
     task_id = await restapi.post_task(payload)
 
     response_object = {"id": task_id, "name":payload.name, "description":payload.description, "rank":payload.rank, "completed":payload.completed, "completion_time":payload.completion_time, "user_id": id}
@@ -51,8 +54,8 @@ async def read_all_tasks(id: int = Path(..., gt=0)) -> List[TaskSchema]:
     return await restapi.get_all_tasks(id)
 
 # DELETE
-@router.delete("/{id}", response_model=UserOut)
-async def delete_user(id: int = Path(..., gt=0)) -> UserOut:
+@router.delete("/{id}", response_model=UserSchema)
+async def delete_user(id: int = Path(..., gt=0)) -> UserSchema:
     user = await restapi.get_user(id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -61,8 +64,8 @@ async def delete_user(id: int = Path(..., gt=0)) -> UserOut:
 
     return user
 
-@router.delete("/{id}/task/{task_id}", response_model=TaskOut)
-async def delete_task(id: int = Path(..., gt=0), task_id: int=Path(..., gt=0)) -> TaskOut:
+@router.delete("/{id}/task/{task_id}", response_model=TaskSchema)
+async def delete_task(id: int = Path(..., gt=0), task_id: int=Path(..., gt=0)) -> TaskSchema:
     task = await restapi.get_task(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
