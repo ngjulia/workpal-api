@@ -56,8 +56,8 @@ async def read_all_tasks(id: int = Path(..., gt=0)) -> List[TaskOut]:
     return await restapi.get_all_tasks(id)
 
 # DELETE
-@router.delete("/{id}/", response_model=UserSchema)
-async def delete_user(id: int = Path(..., gt=0)) -> UserSchema:
+@router.delete("/{id}/", response_model=UserOut)
+async def delete_user(id: int = Path(..., gt=0)) -> UserOut:
     user = await restapi.get_user(id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -66,14 +66,14 @@ async def delete_user(id: int = Path(..., gt=0)) -> UserSchema:
 
     return user
 
-@router.delete("/{id}/task/{task_id}/", response_model=TaskSchema)
-async def delete_task(id: int = Path(..., gt=0), task_id: int=Path(..., gt=0)) -> TaskSchema:
+@router.delete("/{id}/task/{task_id}/", response_model=TaskOut)
+async def delete_task(id: int = Path(..., gt=0), task_id: int=Path(..., gt=0)) -> TaskOut:
     task = await restapi.get_task(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
     await restapi.delete_task(task_id)
-
+    task['user_id'] = id
     return task
 
 @router.put("/{id}/", response_model=UserSchema)
@@ -86,12 +86,13 @@ async def update_user(
 
     return user
 
-@router.put("/{id}/task/{task_id}/", response_model=TaskSchema)
+@router.put("/{id}/task/{task_id}/", response_model=TaskOut)
 async def update_task(
-    payload: TaskIn, id: int = Path(..., gt=0)
-) -> TaskSchema:
-    task = await restapi.put_user(task_id, payload)
-    if not user:
+    payload: TaskIn, id: int = Path(..., gt=0), task_id: int = Path(..., gt=0)
+) -> TaskOut:
+    task = await restapi.put_task(id, task_id, payload)
+    print(task)
+    if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-
+    task['user_id'] = id
     return task

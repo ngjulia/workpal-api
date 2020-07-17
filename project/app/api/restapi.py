@@ -81,11 +81,12 @@ async def put_user(id: int, payload: UserIn) -> Union[dict, None]:
         return updated_user[0]
     return None
 
-async def put_task(id: int, payload: TaskIn) -> Union[dict, None]:
-    task = await Task.filter(id=id).update(
-        name=payload.name, description=payload.description, rank=payload.rank, completed=payload.completed, completion_time=payload.completion_time, user_id = payload.user_id
+async def put_task(id: int, task_id: int, payload: TaskIn) -> Union[dict, None]:
+    print(payload)
+    task = await Task.filter(id=task_id).update(
+        name=payload.name, rank=payload.rank, completed=payload.completed, completion_time=payload.completion_time
     )
     if task:
-        updated_task = await Task.filter(id=id).first().values()
+        updated_task = await Task.filter(id=task_id).first().values()
         return updated_task[0]
     return None
