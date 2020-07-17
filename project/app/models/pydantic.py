@@ -28,18 +28,16 @@ class UserOut(BaseModel):
     
 class TaskIn(BaseModel):
     name: str
-    description: str
     rank: int
     completed: bool
     completion_time: int
     user_id = int
 
 class TaskOut(BaseModel):
+    id: int
     name: str
-    description: str
     rank: int
     completed: bool
     completion_time: int
-    created_at: str
     user_id: int
 

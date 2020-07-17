@@ -1,6 +1,8 @@
-from app.models.pydantic import UserIn, TaskIn
+from app.models.pydantic import UserIn, TaskIn, UserOut, TaskOut
 from app.models.tortoise import User, Task
 from typing import Union, List
+import json
+from datetime import datetime
 
 """
 originally thought that it would make sense to address users by their full name 
@@ -14,8 +16,8 @@ async def post_user(payload: UserIn) -> int:
     await user.save() # how does this function work? -> creates/Updates the current model object
     return user.id
 
-async def post_task(payload: TaskIn) -> int:
-    task = await Task.create(name=payload.name, description=payload.description, rank=payload.rank, completed=payload.completed, completion_time=payload.completion_time, user_id_id = payload.user_id)
+async def post_task(payload: TaskIn, user:UserOut) -> int:
+    task = await Task.create(name=payload.name, rank=payload.rank, completed=payload.completed, completion_time=payload.completion_time, user_id_id = user['id'])
     await task.save()
     return task.id
 
@@ -35,11 +37,15 @@ async def get_all_users() -> List:
 
 async def get_user(id: int) -> Union[dict, None]:
     user = await User.filter(id=id).first().values()
-    tasks = await Task.filter(user_id=id).first().values()
+    tasks = await Task.filter(user_id=id).all().values()
+    res = []
+    for task in tasks:
+        task['created_at'] = task['created_at'].strftime("%m/%d/%Y, %H:%M:%S")
+        res.append(json.dumps(task))
     if user:
         # await user[0].fetch_related('tasks')
         # tasks = user[0].tasks
-        user[0]['tasks'] = tasks # not sure if this is the right syntax
+        user[0]['tasks'] = res # not sure if this is the right syntax
         return user[0]
     return None
 

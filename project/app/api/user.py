@@ -20,29 +20,31 @@ async def create_user(payload: UserIn) -> UserOut:
     response_object = {"id": user_id, "full_name": payload.full_name, "email": payload.email, "phone": payload.phone, "tasks":[]}
     return response_object
 
-@router.post("/{id}/task/", response_model=TaskSchema, status_code=201)
-async def create_task(payload: TaskIn, id: int = Path(..., gt=0)) -> TaskSchema:
+@router.post("/{id}/task/", response_model=TaskOut, status_code=201)
+async def create_task(payload: TaskIn, id: int = Path(..., gt=0)) -> TaskOut:
     user = await restapi.get_user(id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    task_id = await restapi.post_task(payload)
+    task_id = await restapi.post_task(payload, user)
 
-    response_object = {"id": task_id, "name":payload.name, "description":payload.description, "rank":payload.rank, "completed":payload.completed, "completion_time":payload.completion_time, "user_id": id}
+    response_object = {"id": task_id, "name":payload.name, "rank":payload.rank, "completed":payload.completed, "completion_time":payload.completion_time, "user_id": id}
     return response_object
 
 # GET
 @router.get("/{id}/", response_model=UserOut)
 async def read_user(id: int = Path(..., gt=0)) -> UserOut:
     user = await restapi.get_user(id)
+    print(user)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@router.get("/{id}/task/{task_id}/", response_model=TaskSchema)
-async def read_task(id: int = Path(..., gt=0), task_id: int = Path(..., gt=0)) -> TaskSchema:
+@router.get("/{id}/task/{task_id}/", response_model=TaskOut)
+async def read_task(id: int = Path(..., gt=0), task_id: int = Path(..., gt=0)) -> TaskOut:
     task = await restapi.get_task(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
+    task['user_id'] = id
     return task
 
 @router.get("/", response_model=List[UserSchema])
