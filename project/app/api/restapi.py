@@ -23,16 +23,23 @@ async def post_task(payload: TaskIn, user:UserOut) -> int:
 
 # Read
 async def get_all_tasks(id: int) -> List:
-    tasks = await Task.filter(user_id=id).first().values()
+    tasks = await Task.filter(user_id=id).all().values()
+    for task in tasks:
+        task['user_id'] = id
     return tasks
 
 async def get_all_users() -> List:
     users = await User.all().values()
     for user in users:
-    #     tasks = await Task.filter(user_id=user['id']).first().values()
-    #     user['tasks'] = tasks # not sure if this is the right syntax
-        await user.fetch_related('tasks')
-        tasks = user.tasks
+        res = []
+        tasks = await Task.filter(user_id=user['id']).all().values()
+        for task in tasks:
+            task['created_at'] = task['created_at'].strftime("%m/%d/%Y, %H:%M:%S")
+            res.append(json.dumps(task))
+        user['tasks'] = res # not sure if this is the right syntax
+        # await user.fetch_related('tasks')
+        # tasks = user.tasks
+        print(user)
     return users
 
 async def get_user(id: int) -> Union[dict, None]:

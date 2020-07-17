@@ -47,12 +47,12 @@ async def read_task(id: int = Path(..., gt=0), task_id: int = Path(..., gt=0)) -
     task['user_id'] = id
     return task
 
-@router.get("/", response_model=List[UserSchema])
-async def read_all_users() -> List[UserSchema]:
+@router.get("/", response_model=List[UserOut])
+async def read_all_users() -> List[UserOut]:
     return await restapi.get_all_users()
 
-@router.get("/{id}/task/", response_model=List[TaskSchema])
-async def read_all_tasks(id: int = Path(..., gt=0)) -> List[TaskSchema]:
+@router.get("/{id}/task/", response_model=List[TaskOut])
+async def read_all_tasks(id: int = Path(..., gt=0)) -> List[TaskOut]:
     return await restapi.get_all_tasks(id)
 
 # DELETE
