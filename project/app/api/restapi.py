@@ -35,7 +35,7 @@ async def get_all_users() -> List:
         tasks = await Task.filter(user_id=user['id']).all().values()
         for task in tasks:
             task['created_at'] = task['created_at'].strftime("%m/%d/%Y, %H:%M:%S")
-            res.append(json.dumps(task))
+            res.append("" + str(task))
         user['tasks'] = res # not sure if this is the right syntax
         # await user.fetch_related('tasks')
         # tasks = user.tasks
@@ -48,7 +48,7 @@ async def get_user(id: int) -> Union[dict, None]:
     res = []
     for task in tasks:
         task['created_at'] = task['created_at'].strftime("%m/%d/%Y, %H:%M:%S")
-        res.append(json.dumps(task))
+        res.append("" + str(task))
     if user:
         # await user[0].fetch_related('tasks')
         # tasks = user[0].tasks
