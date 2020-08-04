@@ -13,11 +13,11 @@ and tasks by their name, but those things may not be unique... so using ID for n
 async def post_user(payload: UserIn) -> int:
     print(payload.full_name)
     user = User(full_name=payload.full_name, email=payload.email, phone=payload.phone)
-    await user.save() # how does this function work? -> creates/Updates the current model object
+    await user.save()
     return user.id
 
 async def post_task(payload: TaskIn, user:UserOut) -> int:
-    task = await Task.create(name=payload.name, rank=payload.rank, completed=payload.completed, completion_time=payload.completion_time, user_id_id = user['id'])
+    task = await Task.create(name=payload.name, rank=payload.rank, completed=payload.completed, completion_time=payload.completion_time, tags=payload.tags, timer=payload.timer, user_id_id = user['id'])
     await task.save()
     return task.id
 
@@ -34,7 +34,7 @@ async def get_all_users() -> List:
         res = []
         tasks = await Task.filter(user_id=user['id']).all().values()
         for task in tasks:
-            task['created_at'] = task['created_at'].strftime("%m/%d/%Y, %H:%M:%S")
+            task['created_at'] = task['created_at'].strftime("%m/%d/%Y, %H:%M:%S %Z")
             res.append("" + str(task))
         user['tasks'] = res # not sure if this is the right syntax
         # await user.fetch_related('tasks')
@@ -47,7 +47,7 @@ async def get_user(id: int) -> Union[dict, None]:
     tasks = await Task.filter(user_id=id).all().values()
     res = []
     for task in tasks:
-        task['created_at'] = task['created_at'].strftime("%m/%d/%Y, %H:%M:%S")
+        task['created_at'] = task['created_at'].strftime("%m/%d/%Y, %H:%M:%S %Z")
         res.append("" + str(task))
     if user:
         # await user[0].fetch_related('tasks')
@@ -84,7 +84,7 @@ async def put_user(id: int, payload: UserIn) -> Union[dict, None]:
 async def put_task(id: int, task_id: int, payload: TaskIn) -> Union[dict, None]:
     print(payload)
     task = await Task.filter(id=task_id).update(
-        name=payload.name, rank=payload.rank, completed=payload.completed, completion_time=payload.completion_time
+        name=payload.name, rank=payload.rank, completed=payload.completed, completion_time=payload.completion_time, tags=payload.tags, timer=payload.timer,
     )
     if task:
         updated_task = await Task.filter(id=task_id).first().values()

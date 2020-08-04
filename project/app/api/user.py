@@ -27,7 +27,7 @@ async def create_task(payload: TaskIn, id: int = Path(..., gt=0)) -> TaskOut:
         raise HTTPException(status_code=404, detail="User not found")
     task_id = await restapi.post_task(payload, user)
 
-    response_object = {"id": task_id, "name":payload.name, "rank":payload.rank, "completed":payload.completed, "completion_time":payload.completion_time, "user_id": id}
+    response_object = {"id": task_id, "name":payload.name, "rank":payload.rank, "completed":payload.completed, "completion_time":payload.completion_time, "tags": payload.tags, "timer":payload.timer, "user_id": id}
     return response_object
 
 # GET

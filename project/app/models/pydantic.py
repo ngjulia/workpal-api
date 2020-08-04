@@ -32,6 +32,8 @@ class TaskIn(BaseModel):
     completed: bool
     completion_time: int
     user_id = int
+    tags: str
+    timer: int
 
 class TaskOut(BaseModel):
     id: int
@@ -40,4 +42,6 @@ class TaskOut(BaseModel):
     completed: bool
     completion_time: int
     user_id: int
+    tags: str
+    timer: int
 

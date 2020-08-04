@@ -20,7 +20,6 @@ def init_db(app: FastAPI) -> None:
     )
 
 
-# new
 async def generate_schema() -> None:
     log.info("Initializing Tortoise...")
 

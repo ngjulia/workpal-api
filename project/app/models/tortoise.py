@@ -29,6 +29,8 @@ class Task(models.Model):
     completion_time = fields.IntField()
     rank = fields.IntField()
     created_at = fields.DatetimeField(auto_now_add=True)
+    tags = fields.TextField()
+    timer = fields.IntField()
 
     def __str__(self):
         return self.name

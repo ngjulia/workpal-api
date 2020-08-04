@@ -2,6 +2,7 @@ import json
 
 import pytest
 
+## CREATE ----------------------------------------------------------------------------------------->
 def test_create_user(test_app_with_db):
   response = test_app_with_db.post(
     "/user/", data=json.dumps({"full_name": "Kevin", "email": "test@gmail.com","phone": "123-123-1234"})
@@ -76,3 +77,20 @@ def test_create_task_invalid_json(test_app_with_db):
             }
         ]
     }
+
+## READ ----------------------------------------------------------------------------------------->
+def test_read_user(test_app_with_db):
+    response = test_app_with_db.post(
+        "/summaries/", data=json.dumps({"url": "https://foo.bar"})
+    )
+    summary_id = response.json()["id"]
+
+    response = test_app_with_db.get(f"/summaries/{summary_id}/")
+    assert response.status_code == 200
+
+    response_dict = response.json()
+    assert response_dict["id"] == summary_id
+    assert response_dict["url"] == "https://foo.bar"
+    assert response_dict["summary"]d
+    assert response_dict["created_at"]
+
