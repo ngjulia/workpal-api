@@ -1,4 +1,4 @@
-from app.models.pydantic import UserIn, TaskIn, UserOut, TaskOut, UserAuth
+from app.models.pydantic import UserIn, TaskIn, UserOut, TaskOut, UserAuth, Token, TokenData
 from app.models.tortoise import User, Task
 from typing import Union, List
 import json
@@ -62,6 +62,13 @@ async def get_user(id: int) -> Union[dict, None]:
         # tasks = user[0].tasks
         user[0]['tasks'] = res # not sure if this is the right syntax
         return user[0]
+    return None
+
+async def get_id_from_username(username: str) -> Union[int, None]:
+    user = await User.filter(username=username).first().values()
+    print(user)
+    if user:
+        return user[0]['id']
     return None
 
 async def get_task(id: int) -> Union[dict, None]:

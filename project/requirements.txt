@@ -1,7 +1,7 @@
 fastapi==0.55.1
 uvicorn==0.11.5
 asyncpg==0.20.1
-tortoise-orm==0.16.12
+tortoise-orm==0.16.14
 pytest==5.4.2
 requests==2.23.0
 gunicorn==20.0.4
@@ -11,3 +11,5 @@ black==19.10b0
 isort==4.3.21
 passlib==1.7.2
 bcrypt==3.1.7
+python-jose==3.1.0
+python-multipart==0.0.5
