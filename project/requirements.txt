@@ -9,3 +9,5 @@ pytest-cov==2.9.0
 flake8===3.8.2
 black==19.10b0
 isort==4.3.21
+passlib==1.7.2
+bcrypt==3.1.7

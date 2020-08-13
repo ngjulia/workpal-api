@@ -1,18 +1,26 @@
-from app.models.pydantic import UserIn, TaskIn, UserOut, TaskOut
+from app.models.pydantic import UserIn, TaskIn, UserOut, TaskOut, UserAuth
 from app.models.tortoise import User, Task
 from typing import Union, List
 import json
 from datetime import datetime
+from passlib.context import CryptContext
 
 """
 originally thought that it would make sense to address users by their full name 
 and tasks by their name, but those things may not be unique... so using ID for now
 """
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
 
 # Create
-async def post_user(payload: UserIn) -> int:
+async def post_user(payload: UserAuth) -> int:
     print(payload.full_name)
-    user = User(full_name=payload.full_name, email=payload.email, phone=payload.phone)
+    user = User(full_name=payload.full_name, email=payload.email, phone=payload.phone, username=payload.username, disabled=payload.disabled, hashed_password=get_password_hash(payload.password))
     await user.save()
     return user.id
 
@@ -72,9 +80,9 @@ async def delete_task(id: int) -> int:
     return task
 
 # Update
-async def put_user(id: int, payload: UserIn) -> Union[dict, None]:
+async def put_user(id: int, payload: UserAuth) -> Union[dict, None]:
     user = await User.filter(id=id).update(
-        full_name=payload.full_name, email=payload.email, phone=payload.phone,
+        full_name=payload.full_name, email=payload.email, phone=payload.phone, username=payload.username, disabled=payload.disabled, hashed_password=get_password_hash(payload.password)
     )
     if user:
         updated_user = await User.filter(id=id).first().values()

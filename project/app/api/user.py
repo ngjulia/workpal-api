@@ -1,23 +1,41 @@
 from fastapi import APIRouter, HTTPException, Path
 
+
 from app.api import restapi
 from app.models.pydantic import (
     UserIn,
     UserOut,
+    UserAuth,
     TaskIn,
     TaskOut,
 )
 from app.models.tortoise import UserSchema, TaskSchema
 from typing import List
+from passlib.context import CryptContext
 
 router = APIRouter()
 
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+
 # POST 
 @router.post("/", response_model=UserOut, status_code=201)
-async def create_user(payload: UserIn) -> UserOut:
+async def create_user(payload: UserAuth) -> UserOut:
     user_id = await restapi.post_user(payload)
 
-    response_object = {"id": user_id, "full_name": payload.full_name, "email": payload.email, "phone": payload.phone, "tasks":[]}
+    response_object = {
+        "id": user_id,
+        "full_name": payload.full_name, 
+        "email": payload.email, 
+        "phone": payload.phone, 
+        "username": payload.username, 
+        "disabled": False,
+        "tasks":[]
+    }
     return response_object
 
 @router.post("/{id}/task/", response_model=TaskOut, status_code=201)
@@ -78,7 +96,7 @@ async def delete_task(id: int = Path(..., gt=0), task_id: int=Path(..., gt=0)) -
 
 @router.put("/{id}/", response_model=UserSchema)
 async def update_user(
-    payload: UserIn, id: int = Path(..., gt=0)
+    payload: UserAuth, id: int = Path(..., gt=0)
 ) -> UserSchema:
     user = await restapi.put_user(id, payload)
     if not user:

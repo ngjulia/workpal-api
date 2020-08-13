@@ -17,6 +17,9 @@ class User(models.Model):
     full_name= fields.TextField()
     email= fields.TextField()
     phone=fields.TextField()
+    username = fields.TextField()
+    hashed_password = fields.TextField()
+    disabled = fields.BooleanField()
 
     def __str__(self):
         return self.full_name

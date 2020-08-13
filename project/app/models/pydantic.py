@@ -18,6 +18,8 @@ class UserIn(BaseModel):
     full_name: Optional[str] = None
     email: str
     phone: str
+    username: str
+    disabled: bool
     
 class UserOut(BaseModel):
     id: int
@@ -25,7 +27,13 @@ class UserOut(BaseModel):
     email: str
     phone: str
     tasks: List[str]
-    
+    username: str
+    disabled: bool
+    hashed_password: str
+
+class UserAuth(UserIn):
+    password: str
+
 class TaskIn(BaseModel):
     name: str
     rank: int
